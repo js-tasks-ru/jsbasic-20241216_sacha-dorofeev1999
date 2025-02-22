@@ -6,11 +6,13 @@ export default class Carousel {
     this.elem;
     this.CreateSlides();
     this.initCarousel();
+    this.addItem();
+    this.carouselSlide;
   }
   CreateSlides() {
-    this.elem = document.createElement("div")
-    this.elem.classList.add("carousel")
-      this.elem.insertAdjacentHTML("beforeend",
+    this.elem = document.createElement("div");
+    this.elem.classList.add("carousel");
+    this.elem.insertAdjacentHTML('afterbegin',
       `
       <div class="carousel__arrow carousel__arrow_right">
       <img src="/assets/images/icons/angle-icon.svg" alt="icon">
@@ -33,44 +35,61 @@ export default class Carousel {
   ).join("")}
     </div>
     `);
-    document.body.append(this.elem)
+    document.body.append(this.elem);
   }
+
 
   initCarousel() {
     const carousel = document.querySelector('.carousel');
     let carouselInner = carousel.querySelector(".carousel__inner");
-    let carouselSlide = carousel.querySelector(".carousel__slide");
+    this.carouselSlide = carousel.querySelector(".carousel__slide");
     const buttonRight = carousel.querySelector('.carousel__arrow_right');
     const buttonLeft = carousel.querySelector('.carousel__arrow_left');
     let countSlide = carousel.children.length;
-    let slidewidth = carouselSlide.offsetWidth;
-    let count = 0;
-    console.log(slidewidth)
-    console.log(carousel.clientWidth)
-
-
+    carousel.style.width = "988px";
     buttonLeft.style.display = "none";
+    let slidewidth = carouselInner.offsetWidth;
+    let allSlides = carousel.children.length;
+    let count = 0;
+
 
     carousel.addEventListener("click", (event)=> {
       if (event.target.className === "carousel__arrow carousel__arrow_right") {
-
-        if (countSlide > 0 && countSlide < 4) {
-          countSlide--;
-          count -= slidewidth;
-          carouselInner.style.transform = `translateX(${count}px)`;
-          return;
+        if (countSlide -1 == 0) {
+          buttonRight.style.display = 'none';
         }
+        if (countSlide <= allSlides) {
+          buttonLeft.style.display = "";
+        }
+        countSlide--;
+        count -= slidewidth;
+        carouselInner.style.transform = `translateX(${count}px)`;
+        console.log(buttonRight.style.display)
+        return;
       }
       else if (event.target.className === "carousel__arrow carousel__arrow_left") {
-
-        if (countSlide >= 0 && countSlide < 3) {
-          countSlide++;
-          count += slidewidth;
-          carouselInner.style.transform = `translateX(${count}px)`;
-          return;
+        countSlide++;
+        count += slidewidth;
+        carouselInner.style.transform = `translateX(${count}px)`;
+        if (countSlide === allSlides) {
+          buttonLeft.style.display = "none";
         }
+        if (countSlide  > 0) {
+          buttonRight.style.display = "";
+        }
+
+        return;
       }
     });
   }
+  addItem() {
+    this.elem.addEventListener("click", (event) => {
+      console.log(event.target.parentNode.parentNode.parentNode.getAttribute("data-id"))
+      this.elem.dispatchEvent(new CustomEvent("product-add", {
+        detail: event.target.parentNode.parentNode.parentNode.getAttribute("data-id") ,
+        bubbles: true
+      }));
+    });
   }
+}
 
