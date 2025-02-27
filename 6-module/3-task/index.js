@@ -40,41 +40,45 @@ export default class Carousel {
 
 
   initCarousel() {
-    const carousel = document.querySelector('.carousel');
+    const carousel = this.elem;
     let carouselInner = carousel.querySelector(".carousel__inner");
-    this.carouselSlide = carousel.querySelector(".carousel__slide");
+    this.carouselSlide = carousel.querySelectorAll(".carousel__slide");
     const buttonRight = carousel.querySelector('.carousel__arrow_right');
     const buttonLeft = carousel.querySelector('.carousel__arrow_left');
     let countSlide = carousel.children.length;
-    carousel.style.width = "988px";
     buttonLeft.style.display = "none";
-    let slidewidth = carouselInner.offsetWidth;
     let allSlides = carousel.children.length;
     let count = 0;
 
 
     carousel.addEventListener("click", (event)=> {
-      if (event.target.className === "carousel__arrow carousel__arrow_right") {
-        if (countSlide -1 == 0) {
+      let slidewidth = carouselInner.offsetWidth;
+
+
+      if (event.target.classList.contains('carousel__arrow_right')) {
+        countSlide--;
+        count -= slidewidth;
+        carouselInner.style.transform = `translateX(${count}px)`;
+
+        if (countSlide - 1 == 0) {
           buttonRight.style.display = 'none';
         }
         if (countSlide <= allSlides) {
           buttonLeft.style.display = "";
         }
-        countSlide--;
-        count -= slidewidth;
-        carouselInner.style.transform = `translateX(${count}px)`;
-        console.log(buttonRight.style.display)
+
         return;
       }
-      else if (event.target.className === "carousel__arrow carousel__arrow_left") {
+
+      else if (event.target.classList.contains('carousel__arrow_left')) {
         countSlide++;
+
         count += slidewidth;
         carouselInner.style.transform = `translateX(${count}px)`;
         if (countSlide === allSlides) {
           buttonLeft.style.display = "none";
         }
-        if (countSlide  > 0) {
+        else if (countSlide > 0) {
           buttonRight.style.display = "";
         }
 
@@ -82,13 +86,15 @@ export default class Carousel {
       }
     });
   }
-  addItem() {
+   addItem() {
     this.elem.addEventListener("click", (event) => {
-      console.log(event.target.parentNode.parentNode.parentNode.getAttribute("data-id"))
-      this.elem.dispatchEvent(new CustomEvent("product-add", {
-        detail: event.target.parentNode.parentNode.parentNode.getAttribute("data-id") ,
-        bubbles: true
-      }));
+      console.log(event.target.closest('[data-id]'))
+      if (event.target.closest('.carousel__button')) {
+        this.elem.dispatchEvent(new CustomEvent("product-add", {
+          detail: event.target.closest('[data-id]').dataset.id,
+          bubbles: true
+        }));
+      }
     });
   }
 }
