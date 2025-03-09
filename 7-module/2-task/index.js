@@ -1,18 +1,17 @@
 import createElement from '../../assets/lib/create-element.js';
 
 export default class Modal {
-  constructor(modal) {
-    this.modal = modal;
+  constructor() {
+    this.modal;
     this.open();
     this.setTitle();
     this.setBody();
   }
 
   open() {
-    this.modal = document.createElement("div")
-    this.modal.classList.add("modal")
-    this.modal.insertAdjacentHTML("afterbegin",
-      `
+    this.modal = createElement(
+     `
+     <div class = "modal">
        <div class="modal__overlay"></div>
       <div class="modal__inner">
         <div class="modal__header">
@@ -22,6 +21,7 @@ export default class Modal {
         <h3 class="modal__title"></h3>
         </div>
         <div class="modal__body"></div>
+      </div>
       </div>
       `)
     document.body.append(this.modal);
@@ -34,11 +34,9 @@ export default class Modal {
     this.modal.innerText = title
   }
 
-  setBody(body) {
+  setBody(node) {
     this.modal = document.querySelector(".modal__body")
-    let modalBody = document.createElement('div');
-    modalBody.innerHTML = `${body}`
-    this.modal.appendChild(modalBody)
-    console.log(modalBody)
+    this.modal.innerHTML = ""
+    this.modal.append(node)
 }
 }
