@@ -15,7 +15,7 @@ export default class RibbonMenu {
     this.elem.insertAdjacentHTML("afterbegin",
       `
     <button class="ribbon__arrow ribbon__arrow_left">
-      <img src="/assets/images/icons/angle-left-icon.svg" alt="icon">
+      <img src="/assets/images/icons/angle-icon.svg" alt="icon">
     </button>
     <nav class="ribbon__inner">
       ${this.categories.map(({id, name})=> `
